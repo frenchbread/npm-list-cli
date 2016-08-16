@@ -8,6 +8,9 @@
     "test": "npm build && ava",
     "prepublish": "npm build"
   },
+  "bin": {
+    "npm-list": "cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/frenchbread/npm-list-cli.git"
@@ -23,6 +26,7 @@
   },
   "homepage": "https://github.com/frenchbread/npm-list-cli#readme",
   "dependencies": {
+    "meow": "^3.7.0",
     "ora": "^0.3.0"
   },
   "devDependencies": {
