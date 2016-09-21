@@ -1,10 +1,18 @@
 # npm-list-cli
 
-> A better `npm list`
+> A better `npm list`. Returns a clean list of NPM dependencies. 
 
-## Status
+## Usage
 
-`In development`
+```
+$ npm-list
+```
+
+or
+
+```
+$ npm-list --global
+```
 
 ## License
 
