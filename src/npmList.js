@@ -1,15 +1,11 @@
 import childProcess from 'child_process';
 import ora from 'ora';
 
-function regexPackageName (str) {
-  return str.match(/[a-z0-9-]+@[0-9]+.[0-9]+.[0-9]/gi);
-}
+const packageName = 'npm-list-cli';
+const exec = childProcess.exec;
+const spinner = ora();
 
 module.exports =  (listGlobal) => {
-
-  const packageName = 'npm-list-cli';
-  const exec = childProcess.exec;
-  const spinner = ora();
 
   console.log('\n');
 
@@ -19,20 +15,48 @@ module.exports =  (listGlobal) => {
 
   const globalFlag = (listGlobal) ? '--global' : '';
 
-  exec('npm list --depth=0 ' + globalFlag, (err, stdout, stderr) => {
+  getPackages(globalFlag)
+    .then((packages) => {
+      printPackages(packages, globalFlag);
+    })
+}
 
-    spinner.stop();
+function regexPackageName (str) {
+  return str.match(/[a-z0-9-]+@[0-9]+.[0-9]+.[0-9]/gi);
+}
 
-    if (err) console.error(err);
+function getPackages (globalFlag) {
+  return new Promise((resolve, reject) => {
+    exec('npm list --depth=0 ' + globalFlag, (err, stdout, stderr) => {
 
-    const packagesList = regexPackageName(stdout);
+      spinner.stop();
 
-    packagesList.forEach((pkg) => {
+      if (err) reject(err);
 
-      if (pkg.indexOf(packageName) === -1) {
-        console.log(' - ' + pkg);
-      }
+      const packagesList = regexPackageName(stdout);
+
+      let packages = [];
+
+      packagesList.forEach((pkg) => {
+
+        if (pkg.indexOf(packageName) === -1) {
+          packages.push(pkg);
+        }
+      });
+
+      resolve(packages);
+      // console.log(stderr);
     });
-    // console.log(stderr);
   });
+}
+
+function printPackages (packages, globalFlag) {
+  if (globalFlag) {
+    console.log(`Listing global packages (${packages.length}): \n`);
+  } else {
+    console.log(`Listing packages (${packages.length}): \n`);
+  }
+  packages.forEach((pkg) => {
+    console.log(' - ' + pkg);
+  })
 }
