@@ -3,20 +3,20 @@ import ora from 'ora';
 
 const packageName = 'npm-list-cli';
 const exec = childProcess.exec;
-const spinner = ora();
 
 module.exports =  (listGlobal) => {
 
   console.log('\n');
 
+  const spinner = ora().start();
   spinner.text = 'Fetching NPMs..'
   spinner.color = 'yellow';
-  spinner.start();
 
   const globalFlag = (listGlobal) ? '--global' : '';
 
   getPackages(globalFlag)
     .then((packages) => {
+      spinner.stop();
       printPackages(packages, globalFlag);
     })
 }
@@ -28,8 +28,6 @@ function regexPackageName (str) {
 function getPackages (globalFlag) {
   return new Promise((resolve, reject) => {
     exec('npm list --depth=0 ' + globalFlag, (err, stdout, stderr) => {
-
-      spinner.stop();
 
       if (err) reject(err);
 
