@@ -1,7 +1,7 @@
 import childProcess from 'child_process';
 import ora from 'ora';
 
-const packageName = 'npm-list-cli';
+// const packageName = 'npm-list-cli';
 const exec = childProcess.exec;
 
 module.exports =  (listGlobal) => {
@@ -37,13 +37,10 @@ function getPackages (globalFlag) {
 
       packagesList.forEach((pkg) => {
 
-        if (pkg.indexOf(packageName) === -1) {
-          packages.push(pkg);
-        }
+        packages.push(pkg);
       });
 
       resolve(packages);
-      // console.log(stderr);
     });
   });
 }
